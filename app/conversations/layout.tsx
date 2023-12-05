@@ -13,12 +13,7 @@ export default async function MessageLayout({
   console.log(conversations);
   return (
     <Sidebarchat>
-      <ConversationList
-        userId={userId}
-        // users={users}
-        // title="Messages"
-        initialItems={conversations}
-      />
+      <ConversationList userId={userId} initialItems={conversations} />
       <div className="h-full">{children}</div>
     </Sidebarchat>
   );

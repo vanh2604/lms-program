@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const newMessage = await db.message.create({
       data: {
         body: message,
-        // image: image,
+        image: image,
         conversation: {
           connect: { id: conversationId },
         },
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
           select: {
             seenId: true,
             body: true,
+            image: true,
           },
           orderBy: {
             createdAt: "asc",

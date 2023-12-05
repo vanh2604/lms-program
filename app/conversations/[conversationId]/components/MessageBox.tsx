@@ -11,6 +11,7 @@ import { format } from "date-fns";
 // import ImageModal from "./ImageModal";
 import { UserButton, auth, useUser } from "@clerk/nextjs";
 import { Conversation, Message } from "@prisma/client";
+import ImageModal from "./ImageModal";
 
 interface MessageBoxProps {
   data: Message;
@@ -45,8 +46,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   const message = clsx(
     "text-sm w-fit overflow-hidden",
     isOwn ? "bg-sky-500 text-white" : "bg-gray-100",
-    // data.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3',
-    false ? "rounded-md p-0" : "rounded-full py-2 px-3"
+    data.image ? "rounded-md p-0" : "rounded-full py-2 px-3"
   );
 
   return (
@@ -66,7 +66,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           </div>
         </div>
         <div className={message}>
-          {/* <ImageModal
+          <ImageModal
             src={data.image}
             isOpen={imageModalOpen}
             onClose={() => setImageModalOpen(false)}
@@ -88,8 +88,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
             />
           ) : (
             <div>{data.body}</div>
-          )} */}
-          <div>{data.body}</div>
+          )}
         </div>
         {/* {isLast && isOwn && seenList.length > 0 && (
           <div

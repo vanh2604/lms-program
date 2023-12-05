@@ -1,7 +1,7 @@
 import EmptyState from "@/components/messages/EmptyState";
 import clsx from "clsx";
 const MessagePage = () => {
-  const isOpen = false;
+  const isOpen = true;
   return (
     <div
       className={clsx(

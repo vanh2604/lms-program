@@ -12,6 +12,7 @@ generator client {
 model Course {
   id          String  @id @default(uuid())
   userId      String
+  teacherName String?
   title       String  @db.Text
   description String? @db.Text
   imageUrl    String? @db.Text
@@ -27,6 +28,7 @@ model Course {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Rating    Rating[]
 
   @@index([categoryId])
   @@fulltext([title])
@@ -111,4 +113,46 @@ model Purchase {
 
   @@unique([userId, courseId])
   @@index([courseId])
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model Conversation {
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  lastMessageAt DateTime  @default(now())
+  name          String?
+  userId1       String
+  user1Name     String?
+  user2Name     String?
+  userId2       String
+  Message       Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  body           String?      @db.Text
+  image          String?      @db.Text
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  seenId         String
+  senderId       String
+  createdAt      DateTime     @default(now())
+}
+
+model Teacher {
+  id          String  @id @default(uuid())
+  userId      String  @db.Text
+  teacherName String? @db.Text
 }

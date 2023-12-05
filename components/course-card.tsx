@@ -1,10 +1,13 @@
+"use client";
+import "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 import { IconBadge } from "@/components/icon-badge";
-import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "@/components/course-progress";
+import ReactStars from "react-rating-stars-component";
+import { caculateRating } from "@/lib/utils";
 
 interface CourseCardProps {
   id: string;
@@ -14,6 +17,8 @@ interface CourseCardProps {
   price: number;
   progress: number | null;
   category: string;
+  rating: any[];
+  isShowRating: boolean;
 }
 
 export const CourseCard = ({
@@ -21,9 +26,10 @@ export const CourseCard = ({
   title,
   imageUrl,
   chaptersLength,
-  price,
   progress,
   category,
+  rating,
+  isShowRating = true,
 }: CourseCardProps) => {
   return (
     <Link href={`/courses/${id}`}>
@@ -42,6 +48,17 @@ export const CourseCard = ({
               <span>
                 {chaptersLength} {chaptersLength === 1 ? "Chapter" : "Chapters"}
               </span>
+            </div>
+            <div className="flex items-center">
+              {isShowRating && (
+                <ReactStars
+                  count={5}
+                  value={caculateRating(rating)}
+                  size={14}
+                  activeColor="#ffd700"
+                  edit={false}
+                />
+              )}
             </div>
           </div>
           {progress !== null ? (

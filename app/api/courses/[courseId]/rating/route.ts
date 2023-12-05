@@ -3,24 +3,28 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 
-export async function POST(req: Request) {
+export async function POST(
+  req: Request,
+  { params }: { params: { courseId: string } }
+) {
   try {
     const { userId } = auth();
-    const { title, teacherName } = await req.json();
+    const { rating } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const course = await db.course.create({
+    const userRating = await db.rating.create({
       data: {
         userId,
-        title,
-        teacherName,
+        courseId: params.courseId,
+        rating,
       },
     });
 
-    return NextResponse.json(course);
+    console.log(userRating);
+    return NextResponse.json(userRating);
   } catch (error) {
     console.log("[COURSES]", error);
     return new NextResponse("Internal Error", { status: 500 });

@@ -1,19 +1,33 @@
 "use client";
 
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+import { UserButton, useAuth, useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { isTeacher } from "@/lib/teacher";
 
 import { SearchInput } from "./search-input";
+import { db } from "@/lib/db";
+import React from "react";
+import axios from "axios";
 
-export const NavbarRoutes = () => {
-  const { userId } = useAuth();
+interface NavbarRoutesProps {
+  isTeacher: boolean;
+}
+
+export const NavbarRoutes: React.FC<NavbarRoutesProps> = ({ isTeacher }) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useUser();
 
+  const handleBecomeTeacher = async () => {
+    try {
+      const response = await axios.post("/api/teacher", { userId: user?.id });
+      console.log(response);
+      router.refresh();
+    } catch {}
+  };
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isCoursePage = pathname?.includes("/courses");
   const isSearchPage = pathname === "/search";
@@ -33,17 +47,22 @@ export const NavbarRoutes = () => {
               Exit
             </Button>
           </Link>
-        ) : isTeacher(userId) ? (
+        ) : isTeacher ? (
           <Link href="/teacher/courses">
             <Button size="sm" variant="ghost">
               Teacher mode
             </Button>
           </Link>
-        ) : null}
-        <UserButton
-          afterSignOutUrl="/"
-        />
+        ) : (
+          <>
+            {" "}
+            <Button size="sm" variant="ghost" onClick={handleBecomeTeacher}>
+              Become teacher
+            </Button>
+          </>
+        )}
+        <UserButton afterSignOutUrl="/" />
       </div>
     </>
-  )
-}
+  );
+};

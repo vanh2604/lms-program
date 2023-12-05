@@ -29,6 +29,8 @@ export const getChapter = async ({
       },
       select: {
         price: true,
+        userId: true,
+        teacherName: true,
       },
     });
 

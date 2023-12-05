@@ -1,19 +1,24 @@
+import { db } from "@/lib/db";
 import { isTeacher } from "@/lib/teacher";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-const TeacherLayout = ({
-  children
-}: {
-  children: React.ReactNode;
-}) => {
+const TeacherLayout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = auth();
-
-  if (!isTeacher(userId)) {
+  const isTeacher = await db.teacher.findFirst({
+    where: {
+      userId: userId!,
+    },
+    select: {
+      id: true,
+      teacherName: true,
+    },
+  });
+  if (!isTeacher) {
     return redirect("/");
   }
 
-  return <>{children}</>
-}
- 
+  return <>{children}</>;
+};
+
 export default TeacherLayout;
